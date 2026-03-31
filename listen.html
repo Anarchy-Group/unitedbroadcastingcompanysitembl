@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>UBC Listen</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #070707;
+      color: #ffffff;
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      background: #000;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, rgba(255,138,0,0.12), transparent 28%),
+        linear-gradient(180deg, #0b0b0b 0%, #111111 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1d1d1d;
+      padding: 18px 18px 14px;
+    }
+
+    .topbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: #ffb454;
+      font-weight: 800;
+    }
+
+    .brand {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: #ff8a00;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: #ffffff;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid #232323;
+      background: #141414;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 18px 18px 110px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #ff8a00 0%, #ff3c00 100%);
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -35px;
+      top: -35px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 9px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .hero-card h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.05;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-card p {
+      margin: 0 0 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #fff5ee;
+      max-width: 260px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .hero-btn.primary {
+      background: #ffffff;
+      color: #111111;
+      flex: 1 1 150px;
+    }
+
+    .hero-btn.secondary {
+      background: rgba(255,255,255,0.16);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.18);
+      flex: 1 1 110px;
+    }
+
+    .section {
+      margin-bottom: 26px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .section-header a {
+      color: #ffb454;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .live-now-card {
+      background: #111111;
+      border: 1px solid #1f1f1f;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .live-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1b1b1b;
+      border: 1px solid #2a2a2a;
+      color: #ffb454;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 800;
+      padding: 7px 10px;
+      border-radius: 999px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff4d4d;
+      box-shadow: 0 0 10px rgba(255,77,77,0.8);
+    }
+
+    .live-station {
+      font-size: 24px;
+      font-weight: 900;
+      margin: 0 0 6px;
+    }
+
+    .live-desc {
+      margin: 0;
+      color: #c9c9c9;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .live-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .small-btn {
+      flex: 1;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .small-btn.primary {
+      background: #ff8a00;
+      color: #111;
+    }
+
+    .small-btn.secondary {
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #2c2c2c;
+    }
+
+    .station-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scroll-snap-type: x proximity;
+    }
+
+    .station-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .station-scroll::-webkit-scrollbar-thumb {
+      background: #2a2a2a;
+      border-radius: 999px;
+    }
+
+    .station-card {
+      min-width: 220px;
+      max-width: 220px;
+      border-radius: 22px;
+      padding: 18px;
+      color: #fff;
+      text-decoration: none;
+      scroll-snap-align: start;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .station-card h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .station-card p {
+      margin: 0 0 14px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .station-link {
+      font-size: 13px;
+      font-weight: 800;
+      opacity: 0.95;
+    }
+
+    .radio1 { background: linear-gradient(135deg, #111111 0%, #3a3a3a 100%); }
+    .radio2 { background: linear-gradient(135deg, #ff8a00 0%, #ff3c00 100%); }
+    .radio3 { background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%); }
+    .radio4 { background: linear-gradient(135deg, #7dd3fc 0%, #1e3a8a 100%); }
+    .radio5 { background: linear-gradient(135deg, #14b8a6 0%, #7dd3fc 100%); }
+    .radio6 { background: linear-gradient(135deg, #84cc16 0%, #15803d 100%); }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .quick-card {
+      background: #111111;
+      border: 1px solid #1f1f1f;
+      border-radius: 20px;
+      padding: 18px;
+      min-height: 130px;
+    }
+
+    .quick-card .emoji {
+      font-size: 26px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .quick-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .quick-card p {
+      margin: 0;
+      color: #c7c7c7;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: 100%;
+      max-width: 430px;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid #1d1d1d;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+      z-index: 50;
+    }
+
+    .bottom-nav a {
+      color: #a9a9a9;
+      text-decoration: none;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 4px;
+    }
+
+    .bottom-nav a.active {
+      color: #ff8a00;
+    }
+
+    .bottom-nav .icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="brand-wrap">
+          <div class="brand-label">Audio Network</div>
+          <div class="brand">UBC <span>Listen</span></div>
+        </div>
+        <button class="icon-btn" type="button">🔍</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="hero-card">
+        <div class="hero-badge">Featured station</div>
+        <h1>UBC Radio 1</h1>
+        <p>Mainstream radio for broad daily listening and flagship network output across the UBC audio network.</p>
+        <div class="hero-actions">
+          <button class="hero-btn primary" onclick="location.href='radio1.html'">▶ Open Radio 1</button>
+          <button class="hero-btn secondary" onclick="document.getElementById('stations').scrollIntoView({behavior:'smooth'})">Browse stations</button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>Live now</h2>
+          <a href="radio1.html">Open</a>
+        </div>
+
+        <div class="live-now-card">
+          <div class="live-top">
+            <div class="live-pill"><span class="dot"></span> Live</div>
+          </div>
+          <div class="live-station">UBC Radio 1</div>
+          <p class="live-desc">Flagship mainstream output with broad appeal, familiar presentation and a full live station page ready to open.</p>
+          <div class="live-actions">
+            <button class="small-btn primary" onclick="location.href='radio1.html'">Listen live</button>
+            <button class="small-btn secondary" onclick="document.getElementById('stations').scrollIntoView({behavior:'smooth'})">More stations</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="stations">
+        <div class="section-header">
+          <h2>Stations</h2>
+          <a href="#">All 6</a>
+        </div>
+
+        <div class="station-scroll">
+          <a class="station-card radio1" href="radio1.html">
+            <h3>Radio 1</h3>
+            <p>Mainstream radio and flagship daily listening.</p>
+            <div class="station-link">Open station →</div>
+          </a>
+
+          <a class="station-card radio2" href="radio2.html">
+            <h3>Radio 2</h3>
+            <p>80s to 90s music with nostalgic favourites.</p>
+            <div class="station-link">Open station →</div>
+          </a>
+
+          <a class="station-card radio3" href="radio3.html">
+            <h3>Radio 3</h3>
+            <p>Classical and orchestral music for calmer listening.</p>
+            <div class="station-link">Open station →</div>
+          </a>
+
+          <a class="station-card radio4" href="radio4.html">
+            <h3>Radio 4</h3>
+            <p>Podcasts, spoken-word and talk-led listening.</p>
+            <div class="station-link">Open station →</div>
+          </a>
+
+          <a class="station-card radio5" href="radio5.html">
+            <h3>Radio 5</h3>
+            <p>00s to 10s music and modern throwbacks.</p>
+            <div class="station-link">Open station →</div>
+          </a>
+
+          <a class="station-card radio6" href="radio6.html">
+            <h3>Radio 6</h3>
+            <p>Non-copyright pure music for safe listening.</p>
+            <div class="station-link">Open station →</div>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>For you</h2>
+        </div>
+
+        <div class="quick-grid">
+          <div class="quick-card">
+            <span class="emoji">🔥</span>
+            <h3>Mainstream picks</h3>
+            <p>Jump into the flagship station for broad, everyday listening.</p>
+          </div>
+
+          <div class="quick-card">
+            <span class="emoji">📼</span>
+            <h3>Retro music</h3>
+            <p>UBC Radio 2 brings together 80s and 90s favourites.</p>
+          </div>
+
+          <div class="quick-card">
+            <span class="emoji">🎻</span>
+            <h3>Classical mood</h3>
+            <p>Settle into orchestral and classical listening on Radio 3.</p>
+          </div>
+
+          <div class="quick-card">
+            <span class="emoji">🎙️</span>
+            <h3>Podcasts & talk</h3>
+            <p>Open Radio 4 for podcast-led and spoken-word listening.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="#" class="active">
+        <span class="icon">🏠</span>
+        <span>Home</span>
+      </a>
+      <a href="#stations">
+        <span class="icon">📻</span>
+        <span>Stations</span>
+      </a>
+      <a href="#">
+        <span class="icon">🕘</span>
+        <span>Schedule</span>
+      </a>
+      <a href="#">
+        <span class="icon">⚙️</span>
+        <span>More</span>
+      </a>
+    </nav>
+  </div>
+</body>
+</html>
